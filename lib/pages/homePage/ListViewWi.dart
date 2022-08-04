@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:gas/configs/urlconfigs.dart';
+import 'package:gas/pages/homePage/ListProducts.dart';
 import 'package:gas/pages/models/sellers.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:io';
@@ -16,6 +18,7 @@ class ListProduct extends StatefulWidget {
 
 class _ListProductState extends State<ListProduct> {
   late Future<List<Sellers>> sellers;
+  var id;
 
   @override
   void initState() {
@@ -24,8 +27,7 @@ class _ListProductState extends State<ListProduct> {
   }
 
   Future<List<Sellers>> getProduct() async {
-    var fullUrl = Uri.parse(
-        'https://click-chama-api.simetriastudio.dev.br/api/get-seller-products');
+    var fullUrl = Uri.parse('$BASE_API/get-seller-products');
 
     var product = await http.get(fullUrl);
     String responseBody = product.body;
@@ -40,7 +42,7 @@ class _ListProductState extends State<ListProduct> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.5,
       child: FutureBuilder<List<Sellers>>(
         future: sellers,
         builder: (context, snapshot) {
@@ -53,6 +55,7 @@ class _ListProductState extends State<ListProduct> {
                   return ListTile(
                     title: GestureDetector(
                       onTap: () {
+                        var id = seller.id;
                         showMaterialModalBottomSheet(
                           context: context,
                           builder: (context) => Container(
@@ -61,6 +64,15 @@ class _ListProductState extends State<ListProduct> {
                               padding: const EdgeInsets.all(8.0),
                               child: Column(children: [
                                 Text('${seller.name!}'),
+                                ElevatedButton(
+                                    onPressed: () => {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) => SellerProducts(id: id!),
+                                              ))
+                                        },
+                                    child: Text('comprar')),
                               ]),
                             ),
                           ),
@@ -81,126 +93,65 @@ class _ListProductState extends State<ListProduct> {
                         ),
                         width: double.infinity,
                         height: 93,
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        child: Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                          Image.asset('assets/img/chama.png'),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.asset('assets/img/chama.png'),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 92,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5.75),
-                                      color: const Color(0xffff614c),
-                                    ),
-                                    padding: const EdgeInsets.all(3),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      // ignore: prefer_const_literals_to_create_immutables
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(
-                                            '${seller.name!}',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
-                                              fontFamily: "Inter",
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 2),
-                                    child: Text(
-                                      'Revenda ${seller.name!}',
-                                      style: TextStyle(
-                                        color: Color(0xff999ea1),
-                                        fontSize: 15,
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    // ignore: prefer_const_literals_to_create_immutables
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          children: [
-                                            Image.asset(
-                                                'assets/img/estrela1.png'),
-                                            const Padding(
-                                              padding: EdgeInsets.all(4.0),
-                                              child: Text(
-                                                '5,0',
-                                                style: TextStyle(
-                                                  color: Color(0xff4e0189),
-                                                  fontSize: 12.22,
-                                                  fontFamily: "Inter",
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                              Container(
+                                width: 92,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.75),
+                                  color: const Color(0xffff614c),
+                                ),
+                                padding: const EdgeInsets.all(3),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 4),
+                                      child: Text(
+                                        '${seller.name!}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          children: [
-                                            Image.asset(
-                                                'assets/img/clock1.png'),
-                                            const Padding(
-                                              padding: EdgeInsets.all(4.0),
-                                              child: Text(
-                                                '40-50 min',
-                                                style: TextStyle(
-                                                  color: Color(0xff4e0189),
-                                                  fontSize: 12.22,
-                                                  fontFamily: "Inter",
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                child: Text(
+                                  'Revenda ${seller.name!}',
+                                  style: const TextStyle(
+                                    color: Color(0xff999ea1),
+                                    fontSize: 15,
+                                    fontFamily: "Inter",
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 // ignore: prefer_const_literals_to_create_immutables
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       children: [
-                                        Image.asset('assets/img/pin1.png'),
+                                        Image.asset('assets/img/estrela1.png'),
                                         const Padding(
                                           padding: EdgeInsets.all(4.0),
                                           child: Text(
-                                            "5 km",
+                                            '5,0',
                                             style: TextStyle(
                                               color: Color(0xff4e0189),
                                               fontSize: 12.22,
@@ -216,11 +167,11 @@ class _ListProductState extends State<ListProduct> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       children: [
-                                        Image.asset('assets/img/money1.png'),
+                                        Image.asset('assets/img/clock1.png'),
                                         const Padding(
                                           padding: EdgeInsets.all(4.0),
                                           child: Text(
-                                            "95.00",
+                                            '40-50 min',
                                             style: TextStyle(
                                               color: Color(0xff4e0189),
                                               fontSize: 12.22,
@@ -234,7 +185,56 @@ class _ListProductState extends State<ListProduct> {
                                   ),
                                 ],
                               )
-                            ]),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Image.asset('assets/img/pin1.png'),
+                                    const Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: Text(
+                                        "5 km",
+                                        style: TextStyle(
+                                          color: Color(0xff4e0189),
+                                          fontSize: 12.22,
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Image.asset('assets/img/money1.png'),
+                                    const Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: Text(
+                                        "95.00",
+                                        style: TextStyle(
+                                          color: Color(0xff4e0189),
+                                          fontSize: 12.22,
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        ]),
                       ),
                     ),
                   );
