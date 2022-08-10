@@ -12,7 +12,7 @@ class PerfilPage extends StatelessWidget {
       child: Column(children: [
         Container(
           width: double.infinity,
-          height: 86,
+          height: 110,
           color: Color(0xff4e0189),
           child: const Center(
             child: Text(
@@ -29,26 +29,27 @@ class PerfilPage extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 40.0),
           child: Column(children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(9.44),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MeusDadosPage()));
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(9.44),
+                  // ignore: prefer_const_literals_to_create_immutables
+                  boxShadow: [
+                    const BoxShadow(
+                      color: Color(0x14000000),
+                      blurRadius: 15.74,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                  color: Colors.white,
+                ),
                 // ignore: prefer_const_literals_to_create_immutables
-                boxShadow: [
-                  const BoxShadow(
-                    color: Color(0x14000000),
-                    blurRadius: 15.74,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-                color: Colors.white,
-              ),
-              // ignore: prefer_const_literals_to_create_immutables
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MeusDadosPage()));
-                },
+
                 child: Container(
                   child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
                       // ignore: prefer_const_literals_to_create_immutables
@@ -191,41 +192,46 @@ class PerfilPage extends StatelessWidget {
                     const Icon(Icons.arrow_right_alt)
                   ]),
             ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(9.44),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(9.44),
+                  // ignore: prefer_const_literals_to_create_immutables
+                  boxShadow: [
+                    const BoxShadow(
+                      color: Color(0x14000000),
+                      blurRadius: 15.74,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                  color: Colors.redAccent,
+                ),
                 // ignore: prefer_const_literals_to_create_immutables
-                boxShadow: [
-                  const BoxShadow(
-                    color: Color(0x14000000),
-                    blurRadius: 15.74,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-                color: Colors.redAccent,
-              ),
-              // ignore: prefer_const_literals_to_create_immutables
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
-                },
-                child: Container(
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        const Text(
-                          "Voltar para Home",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.22,
-                            fontFamily: "Inter",
-                            fontWeight: FontWeight.w600,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
+                  },
+                  child: Container(
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          const Text(
+                            "Voltar para Home",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.22,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        const Icon(Icons.arrow_right_alt)
-                      ]),
+                          const Icon(Icons.arrow_right_alt)
+                        ]),
+                  ),
                 ),
               ),
             ),

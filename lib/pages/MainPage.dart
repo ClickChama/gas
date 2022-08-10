@@ -1,6 +1,8 @@
 // ignore_for_file: unnecessary_const, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:gas/cart/binding/cart_binding.dart';
+import 'package:gas/configs/address.dart';
 import 'package:gas/pages/homePage/ListViewWi.dart';
 import 'package:gas/pages/userPage/perfil.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +25,11 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     getData();
+    CartBindig();
+    UserAddress().addListener(() {
+      setState(() {});
+    });
+    UserAddress().getAddress();
     super.initState();
   }
 
@@ -30,7 +37,7 @@ class _MainPageState extends State<MainPage> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var token = localStorage.getString('token');
     _setHeaders() => {
-          HttpHeaders.authorizationHeader: '${token}',
+          HttpHeaders.authorizationHeader: '$token',
         };
     var fullUrl = Uri.parse('https://click-chama-api.simetriastudio.dev.br/api/auth/customer/info');
     var user = await http.get(fullUrl, headers: _setHeaders());
@@ -91,7 +98,7 @@ class _MainPageState extends State<MainPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 12.0, left: 12.0),
                           child: Text(
-                            'Olá, ${name}! 👋',
+                            'Olá, ${name ?? 'Aguardando...'}! 👋',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -105,7 +112,7 @@ class _MainPageState extends State<MainPage> {
                           padding: const EdgeInsets.only(top: 12.0, left: 12.0),
                           // ignore: prefer_const_constructors
                           child: Text(
-                            'R. Salvador Ferrante, 2470 - 25a  Boqueirão 81670-390',
+                            UserAddress().endereco ?? 'Sem endereço!',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 11.32,
@@ -158,7 +165,7 @@ class _MainPageState extends State<MainPage> {
                 children: [
                   Expanded(
                     flex: 2,
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity,
                       height: 40,
                       child: Column(children: [
@@ -177,7 +184,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Expanded(
                     flex: 2,
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity,
                       height: 40,
                       child: Column(children: [
@@ -196,7 +203,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Expanded(
                     flex: 2,
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity,
                       height: 40,
                       child: Column(children: [
@@ -215,7 +222,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Expanded(
                     flex: 2,
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity,
                       height: 40,
                       child: Column(children: [
