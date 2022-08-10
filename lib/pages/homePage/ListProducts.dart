@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gas/configs/urlconfigs.dart';
+import 'package:gas/pages/checkout/checkout.dart';
 import 'package:gas/pages/models/products.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
@@ -330,31 +331,39 @@ class _SellerProductsState extends State<SellerProducts> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                width: 220,
-                                height: 47,
-                                color: const Color(0xffe24329),
-                                padding: const EdgeInsets.only(
-                                  left: 25,
-                                  right: 17,
-                                  top: 15,
-                                  bottom: 14,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: const [
-                                    Text(
-                                      "Forma de Pagamento",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w900,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const CheckoutPage()),
+                                  );
+                                },
+                                child: Container(
+                                  width: 220,
+                                  height: 47,
+                                  color: const Color(0xffe24329),
+                                  padding: const EdgeInsets.only(
+                                    left: 25,
+                                    right: 17,
+                                    top: 15,
+                                    bottom: 14,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        "Forma de Pagamento",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.w900,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
