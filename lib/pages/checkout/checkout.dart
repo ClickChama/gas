@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gas/pages/userPage/adress.dart';
+import 'package:gas/user/address/controller/address_controller.dart';
+import 'package:get/get.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({Key? key}) : super(key: key);
@@ -17,29 +19,29 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(children: [
-        Container(
-          width: double.infinity,
-          height: 95,
-          color: const Color(0xff4e0189),
-          child: const Center(
-            child: Text(
-              "Forma de pagamento",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 21.81,
-                fontFamily: "Inter",
-                fontWeight: FontWeight.w600,
+      body: Form(
+        child: Column(children: [
+          Container(
+            width: double.infinity,
+            height: 95,
+            color: const Color(0xff4e0189),
+            child: const Center(
+              child: Text(
+                "Forma de pagamento",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 21.81,
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
-        ),
-        Form(
-          child: Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
+                margin: const EdgeInsets.only(top: 25, bottom: 25, left: 20, right: 20),
                 child: const TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -149,24 +151,32 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             // ignore: prefer_const_literals_to_create_immutables
                             children: [
-                              const Text(
-                                'Rua',
-                                style: TextStyle(
-                                  color: Color(0xff999ea1),
-                                  fontSize: 15,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w600,
-                                ),
+                              GetBuilder<AddressController>(
+                                builder: (address) {
+                                  return Text(
+                                    '${address.addressName()}, ${address.addressNumber()} - ${address.addressComplement()}',
+                                    style: const TextStyle(
+                                      color: Color(0xff999ea1),
+                                      fontSize: 15,
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  );
+                                },
                               ),
                               // ignore: prefer_const_constructors
-                              Text(
-                                'Bairro',
-                                style: const TextStyle(
-                                  color: Color(0xff999ea1),
-                                  fontSize: 15,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w600,
-                                ),
+                              GetBuilder<AddressController>(
+                                builder: (address) {
+                                  return Text(
+                                    '${address.addressDistric()} - ${address.addressCity()}',
+                                    style: const TextStyle(
+                                      color: Color(0xff999ea1),
+                                      fontSize: 15,
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -180,24 +190,65 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ]),
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
+            ],
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 5.1,
+            width: MediaQuery.of(context).size.width,
+          ),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  color: const Color(0xffe24329),
+                  height: 70,
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Anterior",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: "Inter",
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                color: const Color(0xff4e0189),
+                height: 70,
+                width: MediaQuery.of(context).size.width / 2,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      height: 50,
-                      width: double.infinity,
-                      color: Colors.red,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Realizar  pedido",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }

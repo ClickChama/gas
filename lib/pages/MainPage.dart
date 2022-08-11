@@ -1,15 +1,12 @@
 // ignore_for_file: unnecessary_const, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:gas/cart/binding/cart_binding.dart';
 import 'package:gas/configs/address.dart';
 import 'package:gas/pages/homePage/ListViewWi.dart';
 import 'package:gas/pages/userPage/perfil.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gas/pages/loginPage.dart';
-import 'dart:convert';
-import 'dart:io';
+import 'package:gas/user/address/controller/address_controller.dart';
+import 'package:gas/user/info/controller/user_controller.dart';
+import 'package:get/get.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -24,37 +21,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    getData();
-    CartBindig();
     UserAddress().addListener(() {
       setState(() {});
     });
     UserAddress().getAddress();
     super.initState();
-  }
-
-  Future<bool> getData() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var token = localStorage.getString('token');
-    _setHeaders() => {
-          HttpHeaders.authorizationHeader: '$token',
-        };
-    var fullUrl = Uri.parse('https://click-chama-api.simetriastudio.dev.br/api/auth/customer/info');
-    var user = await http.get(fullUrl, headers: _setHeaders());
-    String responseBody = user.body;
-    if (user.statusCode == 200) {
-      // print(jsonDecode(responseBody));
-
-      setState(() {
-        name = jsonDecode(responseBody)['name'];
-        localStorage.setString('id_user', jsonDecode(responseBody)['id']);
-      });
-      return true;
-    } else {
-      // print(jsonDecode(responseBody));
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const loginPage()));
-      return false;
-    }
   }
 
   _onTap(int tabIndex) {
@@ -97,28 +68,36 @@ class _MainPageState extends State<MainPage> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 12.0, left: 12.0),
-                          child: Text(
-                            'Olá, ${name ?? 'Aguardando...'}! 👋',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                            ),
+                          child: GetBuilder<UserController>(
+                            builder: (user) {
+                              return Text(
+                                'Olá, ${user.userName()}! 👋',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
                           ),
                         ),
                         // ignore: prefer_const_constructors
                         Padding(
                           padding: const EdgeInsets.only(top: 12.0, left: 12.0),
                           // ignore: prefer_const_constructors
-                          child: Text(
-                            UserAddress().endereco ?? 'Sem endereço!',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11.32,
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                            ),
+                          child: GetBuilder<AddressController>(
+                            builder: (address) {
+                              return Text(
+                                '${address.addressName()}, ${address.addressNumber()} - ${address.addressDistric()}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11.32,
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],

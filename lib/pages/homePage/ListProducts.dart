@@ -333,7 +333,7 @@ class _SellerProductsState extends State<SellerProducts> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (_) => const CheckoutPage()),
                                   );

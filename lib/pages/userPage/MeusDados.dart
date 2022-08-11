@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gas/configs/urlconfigs.dart';
-import 'package:gas/pages/loginPage.dart';
 import 'package:gas/pages/userPage/adress.dart';
-import 'package:gas/providers/provider.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gas/user/address/controller/address_controller.dart';
+import 'package:gas/user/info/controller/user_controller.dart';
+import 'package:get/get.dart';
 
 class MeusDadosPage extends StatefulWidget {
   const MeusDadosPage({Key? key}) : super(key: key);
@@ -16,74 +12,8 @@ class MeusDadosPage extends StatefulWidget {
 }
 
 class _MeusDadosPageState extends State<MeusDadosPage> {
-  String? name;
-  String? email;
-  String? phone;
-  String? cpf;
-  String? endereco;
-  String? numero;
-  String? complemento;
-  String? bairro;
-  String? cep;
-  String? cidade;
-
   @override
-  void initState() {
-    getData();
-    getAddress();
-  }
-
-  Future<bool> getData() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var token = localStorage.getString('token');
-    _setHeaders() => {
-          HttpHeaders.authorizationHeader: '${token}',
-        };
-    var fullUrl = Uri.parse('$BASE_API/auth/customer/info');
-    var user = await http.get(fullUrl, headers: _setHeaders());
-    String responseBody = user.body;
-    if (user.statusCode == 200) {
-      // print(jsonDecode(responseBody));
-      setState(() {
-        name = jsonDecode(responseBody)['name'];
-        email = jsonDecode(responseBody)['email'];
-        phone = jsonDecode(responseBody)['phone'];
-      });
-
-      return true;
-    } else {
-      // print(jsonDecode(responseBody));
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const loginPage()));
-      return false;
-    }
-  }
-
-  Future<bool> getAddress() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var token = localStorage.getString('token');
-    var id = localStorage.getString('id_user');
-    _setHeaders() => {
-          HttpHeaders.authorizationHeader: '${token}',
-        };
-    var fullUrl = Uri.parse('$BASE_API/adress/get/$id');
-    var address = await http.get(fullUrl, headers: _setHeaders());
-    String responseBody = address.body;
-    if (address.statusCode == 200) {
-      print(responseBody);
-      setState(() {
-        endereco = jsonDecode(responseBody)['address'];
-        numero = jsonDecode(responseBody)['number'];
-        bairro = jsonDecode(responseBody)['district'];
-        complemento = jsonDecode(responseBody)['complement'];
-        cep = jsonDecode(responseBody)['zip_code'];
-        cidade = jsonDecode(responseBody)['city'];
-      });
-      return true;
-    } else {
-      print(jsonDecode(responseBody));
-      return false;
-    }
-  }
+  void initState() {}
 
   @override
   Widget build(BuildContext context) {
@@ -147,41 +77,57 @@ class _MeusDadosPageState extends State<MeusDadosPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
-                      Text(
-                        name ?? 'Aguardando...',
-                        style: const TextStyle(
-                          color: Color(0xff999ea1),
-                          fontSize: 15,
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                        ),
+                      GetBuilder<UserController>(
+                        builder: (user) {
+                          return Text(
+                            user.userName(),
+                            style: const TextStyle(
+                              color: Color(0xff999ea1),
+                              fontSize: 15,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
                       ),
-                      Text(
-                        "CPF: ${cpf ?? ''}",
-                        style: const TextStyle(
-                          color: Color(0xff999ea1),
-                          fontSize: 15,
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                        ),
+                      GetBuilder<UserController>(
+                        builder: (user) {
+                          return const Text(
+                            "CPF: ",
+                            style: TextStyle(
+                              color: Color(0xff999ea1),
+                              fontSize: 15,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
                       ),
-                      Text(
-                        "Celular: ${phone ?? ''}",
-                        style: const TextStyle(
-                          color: Color(0xff999ea1),
-                          fontSize: 15,
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                        ),
+                      GetBuilder<UserController>(
+                        builder: (user) {
+                          return Text(
+                            "Celular: ${user.userPhone()}",
+                            style: const TextStyle(
+                              color: Color(0xff999ea1),
+                              fontSize: 15,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
                       ),
-                      Text(
-                        "E-mail: ${email}",
-                        style: const TextStyle(
-                          color: Color(0xff999ea1),
-                          fontSize: 15,
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                        ),
+                      GetBuilder<UserController>(
+                        builder: (user) {
+                          return Text(
+                            "E-mail: ${user.userEmail()}",
+                            style: const TextStyle(
+                              color: Color(0xff999ea1),
+                              fontSize: 15,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -247,24 +193,32 @@ class _MeusDadosPageState extends State<MeusDadosPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        Text(
-                          '${endereco ?? ''} ${numero ?? ''} ${complemento ?? ''}',
-                          style: const TextStyle(
-                            color: const Color(0xff999ea1),
-                            fontSize: 15,
-                            fontFamily: "Inter",
-                            fontWeight: FontWeight.w600,
-                          ),
+                        GetBuilder<AddressController>(
+                          builder: (address) {
+                            return Text(
+                              '${address.addressName()}, ${address.addressNumber()} - ${address.addressComplement()}',
+                              style: const TextStyle(
+                                color: Color(0xff999ea1),
+                                fontSize: 15,
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w600,
+                              ),
+                            );
+                          },
                         ),
                         // ignore: prefer_const_constructors
-                        Text(
-                          '${bairro ?? ''} ${cidade ?? ''} ${cep ?? ''}',
-                          style: const TextStyle(
-                            color: const Color(0xff999ea1),
-                            fontSize: 15,
-                            fontFamily: "Inter",
-                            fontWeight: FontWeight.w600,
-                          ),
+                        GetBuilder<AddressController>(
+                          builder: (address) {
+                            return Text(
+                              '${address.addressDistric()}, ${address.addressCep()}',
+                              style: const TextStyle(
+                                color: Color(0xff999ea1),
+                                fontSize: 15,
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w600,
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

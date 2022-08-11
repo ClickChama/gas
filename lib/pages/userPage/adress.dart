@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gas/configs/urlconfigs.dart';
 import 'package:gas/pages/userPage/MeusDados.dart';
+import 'package:gas/user/address/controller/address_controller.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -21,14 +22,17 @@ class _AdressPageState extends State<AdressPage> {
   String resultado = 'Aqui';
   var id;
 
-  TextEditingController txtcep = TextEditingController();
-  var txtendereco = new TextEditingController();
-  var txtbairro = new TextEditingController();
-  var txtuf = new TextEditingController();
-  var txtcidade = new TextEditingController();
-  var txtnumber = new TextEditingController();
-  var txtcomplemento = new TextEditingController();
+  final addressController = Get.find<AddressController>();
 
+  TextEditingController txtcep = TextEditingController();
+  var txtendereco = TextEditingController();
+  var txtbairro = TextEditingController();
+  var txtuf = TextEditingController();
+  var txtcidade = TextEditingController();
+  var txtnumber = TextEditingController();
+  var txtcomplemento = TextEditingController();
+
+  @override
   void initState() {
     getData();
     super.initState();
@@ -38,7 +42,7 @@ class _AdressPageState extends State<AdressPage> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var token = localStorage.getString('token');
     _setHeaders() => {
-          HttpHeaders.authorizationHeader: '${token}',
+          HttpHeaders.authorizationHeader: '$token',
         };
     var fullUrl = Uri.parse('https://click-chama-api.simetriastudio.dev.br/api/auth/customer/info');
     var user = await http.get(fullUrl, headers: _setHeaders());
@@ -89,7 +93,7 @@ class _AdressPageState extends State<AdressPage> {
         Container(
           width: double.infinity,
           height: 86,
-          color: Color(0xff4e0189),
+          color: const Color(0xff4e0189),
           child: const Center(
             child: Text(
               "Meu Endereço",
@@ -218,15 +222,19 @@ class _AdressPageState extends State<AdressPage> {
                         width: 150,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () async {
-                            var deuCerto = await save();
-                            if (deuCerto) {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MeusDadosPage()));
-                            } else {
-                              print('num deu');
-                            }
+                          onPressed: () {
+                            addressController.storeAddress(
+                              txtendereco.text,
+                              txtnumber.text,
+                              txtcomplemento.text,
+                              txtbairro.text,
+                              txtcidade.text,
+                              txtuf.text,
+                              txtcep.text,
+                            );
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MeusDadosPage()));
                           },
-                          child: Text('Salvar'),
+                          child: const Text('Salvar'),
                         ),
                       ),
                     )
@@ -238,38 +246,5 @@ class _AdressPageState extends State<AdressPage> {
         ),
       ]),
     );
-  }
-
-  Future<bool> save() async {
-    var url = Uri.parse('$BASE_API/adress/store');
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var token = localStorage.getString('token');
-    _setHeaders() => {
-          HttpHeaders.authorizationHeader: '${token}',
-        };
-    var resposta = await http.post(
-      url,
-      headers: _setHeaders(),
-      body: {
-        'id': id,
-        'address': txtendereco.text,
-        'number': txtnumber.text,
-        'complement': txtcomplemento.text,
-        'district': txtbairro.text,
-        'city': txtcidade.text,
-        'state': txtuf.text,
-        'zip_code': txtcep.text,
-      },
-    );
-    String responseBody = resposta.body;
-    var encodeFirst = json.encode(resposta.body);
-    var data = json.decode(encodeFirst);
-    if (resposta.statusCode == 200) {
-      print(data);
-      return true;
-    } else {
-      print(data);
-      return false;
-    }
   }
 }

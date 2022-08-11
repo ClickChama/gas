@@ -41,7 +41,7 @@ class _ListProductState extends State<ListProduct> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height * 0.5,
       child: FutureBuilder<List<Sellers>>(
         future: sellers,
@@ -58,12 +58,12 @@ class _ListProductState extends State<ListProduct> {
                         var id = seller.id;
                         showMaterialModalBottomSheet(
                           context: context,
-                          builder: (context) => Container(
+                          builder: (context) => SizedBox(
                             height: MediaQuery.of(context).size.height * 0.5,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(children: [
-                                Text('${seller.name!}'),
+                                Text(seller.name!),
                                 ElevatedButton(
                                     onPressed: () => {
                                           Navigator.pushReplacement(
@@ -72,7 +72,7 @@ class _ListProductState extends State<ListProduct> {
                                                 builder: (_) => SellerProducts(id: id!),
                                               ))
                                         },
-                                    child: Text('comprar')),
+                                    child: const Text('comprar')),
                               ]),
                             ),
                           ),
@@ -112,9 +112,9 @@ class _ListProductState extends State<ListProduct> {
                                   // ignore: prefer_const_literals_to_create_immutables
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 4),
+                                      padding: const EdgeInsets.symmetric(horizontal: 4),
                                       child: Text(
-                                        '${seller.name!}',
+                                        seller.name!,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,
@@ -127,7 +127,7 @@ class _ListProductState extends State<ListProduct> {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                                 child: Text(
                                   'Revenda ${seller.name!}',
                                   style: const TextStyle(
@@ -242,7 +242,9 @@ class _ListProductState extends State<ListProduct> {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         },
       ),
     );
