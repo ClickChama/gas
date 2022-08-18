@@ -14,6 +14,14 @@ class AddressController extends GetxController {
     getAddress();
   }
 
+  String addressId() {
+    String name = '';
+    for (final item in addressItems) {
+      name += item.id ?? '';
+    }
+    return name;
+  }
+
   String addressName() {
     String name = '';
     for (final item in addressItems) {
@@ -101,7 +109,6 @@ class AddressController extends GetxController {
     );
     result.when(success: (data) {
       addressItems = data;
-   
     }, error: (message) {
       print('erro');
     });

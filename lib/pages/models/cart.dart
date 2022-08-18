@@ -40,4 +40,30 @@ class CartModel {
   String toString() {
     return 'CartModel(id: $id, sellerId: $sellerId, customerId: $customerId, brand: $brand, type: $type, price: $price,  quantity: $quantity)';
   }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'sellerId': sellerId,
+      'customerId': customerId,
+      'brand': brand,
+      'type': type,
+      'price': price,
+      'productType': productType,
+      'quantity': quantity,
+    };
+  }
+
+  factory CartModel.fromMap(Map<String, dynamic> map) {
+    return CartModel(
+      id: map['id'] != null ? map['id'] as String : null,
+      sellerId: map['sellerId'] != null ? map['sellerId'] as String : null,
+      customerId: map['customerId'] != null ? map['customerId'] as String : null,
+      brand: map['brand'] != null ? map['brand'] as String : null,
+      type: map['type'] != null ? map['type'] as String : null,
+      price: map['price'] != null ? map['price'] as double : null,
+      productType: map['productType'] != null ? map['productType'] as int : null,
+      quantity: map['quantity'] != null ? map['quantity'] as int : null,
+    );
+  }
 }

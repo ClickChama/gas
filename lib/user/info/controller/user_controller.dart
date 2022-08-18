@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class UserController extends GetxController {
   final userRespository = UserRepository();
+  RxString userIds = 'sem id'.obs;
 
   List<UserModel> userInfo = [];
 
@@ -12,6 +13,15 @@ class UserController extends GetxController {
   void onInit() {
     super.onInit();
     getUser();
+  }
+
+
+  String userId() {
+    String name = '';
+    for (final item in userInfo) {
+      name += item.id ?? '';
+    }
+    return name;
   }
 
   String userName() {

@@ -11,7 +11,6 @@ class UserRepository {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var fullUrl = Uri.parse('$BASE_API/auth/customer/info');
     var token = localStorage.getString('token');
-
     _setHeaders() => {
           HttpHeaders.authorizationHeader: '$token',
         };

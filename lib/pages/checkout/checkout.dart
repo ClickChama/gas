@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gas/order/controller/order_controller.dart';
 import 'package:gas/pages/userPage/adress.dart';
 import 'package:gas/user/address/controller/address_controller.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,8 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
+  final orderController = Get.find<OrderContrller>();
+
   bool credito = false;
   bool debito = false;
   bool dinheiro = false;
@@ -224,25 +227,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                 ),
               ),
-              Container(
-                color: const Color(0xff4e0189),
-                height: 70,
-                width: MediaQuery.of(context).size.width / 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "Realizar  pedido",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontFamily: "Inter",
-                        fontWeight: FontWeight.w900,
+              GestureDetector(
+                onTap: () {
+                  orderController.storeOrder();
+                },
+                child: Container(
+                  color: const Color(0xff4e0189),
+                  height: 70,
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Realizar  pedido",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: "Inter",
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

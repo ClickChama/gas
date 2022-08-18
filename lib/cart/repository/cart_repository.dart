@@ -43,7 +43,16 @@ class CartRepository {
       headers: {
         "content-type": "application/json",
       },
-      body: jsonEncode({"id": id, "seller_id": sellerId, "customer_id": userId, "brand": brand, "type": type, "price": price, "product_type": productType, "quantity": quantity}),
+      body: jsonEncode({
+        "id": id,
+        "seller_id": sellerId,
+        "customer_id": userId,
+        "brand": brand,
+        "type": type,
+        "price": price,
+        "product_type": productType,
+        "quantity": quantity,
+      }),
     );
     String responseBody = response.body;
     final results = [jsonDecode(response.body)];
