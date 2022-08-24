@@ -11,6 +11,7 @@ class CartRepository {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var fullUrl = Uri.parse('$BASE_API/cart-get');
     var id = localStorage.getString('id_user');
+
     final response = await http.post(
       fullUrl,
       body: {
@@ -18,7 +19,7 @@ class CartRepository {
       },
     );
     String responseBody = response.body;
-    if (response.statusCode != 200) {
+    if (responseBody.isEmpty) {
       return CartResult<List<CartModel>>.error('erro');
     } else {
       List<CartModel> data = List<Map<String, dynamic>>.from(jsonDecode(responseBody)).map(CartModel.fromJson).toList();
@@ -50,7 +51,7 @@ class CartRepository {
         "brand": brand,
         "type": type,
         "price": price,
-        "product_type": productType,
+        "product_type": productType.toString(),
         "quantity": quantity,
       }),
     );

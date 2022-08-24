@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:gas/pages/models/adress.dart';
 import 'package:gas/user/address/address_result/address_result.dart';
 import 'package:gas/user/address/repository/address_repository.dart';
@@ -12,6 +14,13 @@ class AddressController extends GetxController {
   void onInit() {
     super.onInit();
     getAddress();
+    getAtt();
+  }
+
+  getAtt() {
+    Timer.periodic(const Duration(seconds: 10), (timer) {
+      getAddress();
+    });
   }
 
   String addressId() {
@@ -82,11 +91,12 @@ class AddressController extends GetxController {
     final AddressResult<List<AdressModel>> result = await addressRepository.getAddress();
     result.when(success: (data) {
       addressItems = data;
-
       update();
     }, error: (message) {
       print('erro');
     });
+
+    update();
   }
 
   Future<void> storeAddress(

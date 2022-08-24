@@ -37,7 +37,29 @@ class OrderRepository {
     }
   }
 
-  Future storeOrder() async {
+  Future<OrderResult<List<OrderModel>>> getOrderById(id) async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var fullUrl = Uri.parse('$BASE_API/customer/order/$id');
+    var token = localStorage.getString('token');
+
+    _setHeaders() => {
+          HttpHeaders.authorizationHeader: '$token',
+        };
+    final response = await http.get(
+      fullUrl,
+      headers: _setHeaders(),
+    );
+    String responseBody = response.body;
+    final results = [jsonDecode(response.body)];
+    if (response.statusCode != 200) {
+      return OrderResult<List<OrderModel>>.error('erro');
+    } else {
+      List<OrderModel> data = List<Map<String, dynamic>>.from(results).map(OrderModel.fromJson).toList();
+      return OrderResult<List<OrderModel>>.success(data);
+    }
+  }
+
+  Future storeOrder(payment, payback) async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var fullUrl = Uri.parse('$BASE_API/customer/order');
     var token = localStorage.getString('token');
@@ -45,7 +67,8 @@ class OrderRepository {
     var map2 = {
       "seller_id": cartController.sellerId(),
       "customer_id": userId,
-      "customer_address_id": addressController.addressId(),
+      // "customer_address_id": addressController.addressId(),
+      "customer_address_id": 'string',
       "quantity": cartController.cartQty(),
       "total_price": cartController.cartTotalPrice(),
       "products": [
@@ -54,10 +77,13 @@ class OrderRepository {
             "product_id": customer.id,
             "quantity": customer.quantity,
             "unit_price": customer.price,
+            "brand": customer.brand,
+            "name": customer.productType.toString(),
           }
-      ]
+      ],
+      "payment_method": payment.toString(),
+      "payback": payback,
     };
-
     _setHeaders() => {
           HttpHeaders.authorizationHeader: '$token',
           "content-type": "application/json",

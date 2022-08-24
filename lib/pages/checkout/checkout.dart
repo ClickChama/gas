@@ -11,12 +11,14 @@ class CheckoutPage extends StatefulWidget {
   State<CheckoutPage> createState() => _CheckoutPageState();
 }
 
+enum SingingCharacter { credito, debito, dinheiro }
+
 class _CheckoutPageState extends State<CheckoutPage> {
   final orderController = Get.find<OrderContrller>();
 
-  bool credito = false;
-  bool debito = false;
-  bool dinheiro = false;
+  bool display = false;
+  var txttroco = TextEditingController();
+  SingingCharacter? _character = SingingCharacter.credito;
 
   @override
   Widget build(BuildContext context) {
@@ -65,41 +67,58 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                 ),
               ),
-              CheckboxListTile(
-                title: const Text(
-                  'Cartão de Crédito Maquininha',
-                  style: TextStyle(color: Colors.grey),
+              ListTile(
+                title: const Text('Crédito'),
+                leading: Radio<SingingCharacter>(
+                  value: SingingCharacter.credito,
+                  groupValue: _character,
+                  onChanged: (SingingCharacter? value) {
+                    setState(() {
+                      _character = value;
+                      display = false;
+                    });
+                  },
                 ),
-                value: credito,
-                onChanged: (value) {
-                  setState(() {
-                    credito = value!;
-                  });
-                },
               ),
-              CheckboxListTile(
-                title: const Text(
-                  'Cartão de débito Maquininha',
-                  style: TextStyle(color: Colors.grey),
+              ListTile(
+                title: const Text('Débito'),
+                leading: Radio<SingingCharacter>(
+                  value: SingingCharacter.debito,
+                  groupValue: _character,
+                  onChanged: (SingingCharacter? value) {
+                    setState(() {
+                      _character = value;
+                      display = false;
+                    });
+                  },
                 ),
-                value: debito,
-                onChanged: (value) {
-                  setState(() {
-                    debito = value!;
-                  });
-                },
               ),
-              CheckboxListTile(
-                title: const Text(
-                  'Dinheiro',
-                  style: TextStyle(color: Colors.grey),
+              ListTile(
+                title: const Text('Dinheiro'),
+                leading: Radio<SingingCharacter>(
+                  value: SingingCharacter.dinheiro,
+                  groupValue: _character,
+                  onChanged: (SingingCharacter? value) {
+                    setState(() {
+                      _character = value;
+                      display = true;
+                    });
+                  },
                 ),
-                value: dinheiro,
-                onChanged: (value) {
-                  setState(() {
-                    dinheiro = value!;
-                  });
-                },
+              ),
+              Visibility(
+                visible: display,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  child: TextFormField(
+                    controller: txttroco,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Troco para',
+                    ),
+                  ),
+                ),
               ),
               GestureDetector(
                 onTap: () {
@@ -195,10 +214,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
             ],
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 5.1,
-            width: MediaQuery.of(context).size.width,
-          ),
           Row(
             children: [
               GestureDetector(
@@ -229,7 +244,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  orderController.storeOrder();
+                  orderController.storeOrder(_character, txttroco.text);
                 },
                 child: Container(
                   color: const Color(0xff4e0189),

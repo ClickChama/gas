@@ -12,6 +12,7 @@ class AddressRepository {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var fullUrl = Uri.parse('$BASE_API/adress/get');
     var id = localStorage.getString('id_user');
+    print(id);
     final response = await http.post(
       fullUrl,
       body: {

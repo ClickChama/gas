@@ -1,10 +1,10 @@
-// ignore_for_file: unnecessary_const, prefer_const_constructors
-
-import 'package:flutter/material.dart';
-import 'package:gas/configs/address.dart';
-import 'package:gas/pages/homePage/ListViewWi.dart';
-import 'package:gas/pages/userPage/perfil.dart';
+import 'package:gas/cart/controller/cart_controller.dart';
+import 'package:gas/order/controller/order_controller.dart';
 import 'package:gas/user/address/controller/address_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:gas/pages/homePage/ListViewWi.dart';
+import 'package:gas/pages/pedidos/pedidos.dart';
+import 'package:gas/pages/userPage/perfil.dart';
 import 'package:gas/user/info/controller/user_controller.dart';
 import 'package:get/get.dart';
 
@@ -16,29 +16,31 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  UserController userController = Get.put(UserController());
+  AddressController addressController = Get.put(AddressController());
+  CartController cartController = Get.put(CartController());
+  OrderContrller orderController = Get.put(OrderContrller());
+
   var name;
   int _selectedIndex = 0;
 
   @override
   void initState() {
-    UserAddress().addListener(() {
-      setState(() {});
-    });
-    UserAddress().getAddress();
     super.initState();
   }
 
   _onTap(int tabIndex) {
     switch (tabIndex) {
       case 0:
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainPage()));
         break;
       case 1:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const TodosPedidosPage()));
         break;
       case 2:
         break;
       case 3:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PerfilPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const PerfilPage()));
         break;
     }
     setState(() {
@@ -72,6 +74,7 @@ class _MainPageState extends State<MainPage> {
                             builder: (user) {
                               return Text(
                                 'Olá, ${user.userName()}! 👋',
+                                // '',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -90,6 +93,7 @@ class _MainPageState extends State<MainPage> {
                             builder: (address) {
                               return Text(
                                 '${address.addressName()}, ${address.addressNumber()} - ${address.addressDistric()}',
+                                // '',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 11.32,
@@ -222,7 +226,7 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
           ),
-          ListProduct(),
+          const ListProduct(),
         ],
       ),
       bottomNavigationBar: SizedBox(

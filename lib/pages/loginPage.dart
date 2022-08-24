@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gas/pages/MainPage.dart';
 import 'package:gas/pages/RegisterPage.dart';
+import 'package:gas/pages/init_address.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -155,7 +155,7 @@ class _loginPageState extends State<loginPage> {
                             curretFocus.unfocus();
                           }
                           if (deuCerto) {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => InitApp()));
                           } else {
                             _passwordController.clear();
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -239,7 +239,7 @@ class _loginPageState extends State<loginPage> {
     var encodeHead = base64.encode(utf8.encode(credentials));
 
     _setHeaders() => {
-          HttpHeaders.authorizationHeader: 'Basic ' + encodeHead,
+          HttpHeaders.authorizationHeader: 'Basic $encodeHead',
         };
 
     var url = Uri.parse('https://click-chama-api.simetriastudio.dev.br/api/auth/customer/login');
@@ -253,7 +253,6 @@ class _loginPageState extends State<loginPage> {
     if (resposta.statusCode == 200) {
       print(jsonDecode(responseBody)['id']);
       await sharedPreferences.setString('token', 'Bearer ${jsonDecode(responseBody)['access_token']}');
-
       return true;
     } else {
       print(jsonDecode(responseBody));

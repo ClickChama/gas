@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:gas/pages/models/user.dart';
 import 'package:gas/user/info/repository/user_repository.dart';
 import 'package:gas/user/info/user_result/user_result.dart';
@@ -5,29 +7,19 @@ import 'package:get/get.dart';
 
 class UserController extends GetxController {
   final userRespository = UserRepository();
-  RxString userIds = 'sem id'.obs;
 
   List<UserModel> userInfo = [];
 
   @override
   void onInit() {
-    super.onInit();
     getUser();
-  }
-
-
-  String userId() {
-    String name = '';
-    for (final item in userInfo) {
-      name += item.id ?? '';
-    }
-    return name;
+    super.onInit();
   }
 
   String userName() {
     String name = '';
     for (final item in userInfo) {
-      name += item.name ?? '';
+      name += item.name!;
     }
     return name;
   }
@@ -48,14 +40,25 @@ class UserController extends GetxController {
     return name;
   }
 
+ 
+
+  String getId() {
+    String name = '';
+    // ignore: avoid_function_literals_in_foreach_calls
+    userInfo.forEach((element) {
+      name = element.id!;
+    });
+    return name;
+  }
+
   Future<void> getUser() async {
     final UserResult<List<UserModel>> result = await userRespository.getUser();
     result.when(success: (data) {
       userInfo = data;
-
       update();
     }, error: (message) {
       print('erro');
     });
+    update();
   }
 }

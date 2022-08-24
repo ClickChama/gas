@@ -7,10 +7,5 @@ import 'cart/controller/cart_controller.dart';
 import 'user/info/controller/user_controller.dart';
 
 void main() {
-  Get.put(UserController());
-  Get.put(AddressController());
-  Get.lazyPut<CartController>(() => CartController());
-  Get.put(OrderContrller());
-
   runApp(const MyApp());
 }

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:gas/cart/cart_result/cart_result.dart';
 import 'package:gas/cart/repository/cart_repository.dart';
 import 'package:gas/pages/models/cart.dart';
@@ -13,8 +14,16 @@ class CartController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     getCartItems();
+    getCart();
+    super.onInit();
+  }
+
+  getCart() {
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      getCartItems();
+      // print('procurando...');
+    });
   }
 
   double cartTotalPrice() {
@@ -33,8 +42,6 @@ class CartController extends GetxController {
     return qty;
   }
 
-
-
   String sellerId() {
     String total = '';
     cartItems.forEachIndexed((index, element) {
@@ -49,11 +56,10 @@ class CartController extends GetxController {
     final CartResult<List<CartModel>> result = await cartRespository.getCartItems();
     result.when(success: (data) {
       cartItems = data;
-
-      update();
     }, error: (message) {
       print('erro');
     });
+    update();
   }
 
   int getItemIndex(CartModel item) {
@@ -83,6 +89,7 @@ class CartController extends GetxController {
         brand: brand,
         id: id,
         price: price,
+        productType: productType,
         quantity: quantity,
         type: type,
         sellerId: sellerId,
